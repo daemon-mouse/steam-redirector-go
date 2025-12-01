@@ -23,6 +23,7 @@ func startLog() {
 		logWriter, logFile = io.MultiWriter(os.Stderr, lf), lf
 	}
 	log.SetOutput(logWriter)
+	log.SetPrefix("steam-redirector: ")
 }
 
 func closeLog() {

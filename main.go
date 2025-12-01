@@ -28,10 +28,10 @@ func run() error {
 		if envErr != nil {
 			log.Printf("warn: failed to set environment variable NO_REDIRECT=1: %v\n", err)
 		}
-		log.Printf("reading from file\n")
+		log.Printf("Reading from file...\n")
 		exePath, err = readPathFromFile(MO2PathFile)
 	} else {
-		log.Printf("reading original launcher\n")
+		log.Printf("Reading original launcher...\n")
 		exePath, err = getOriginalLauncher(os.Args[0])
 	}
 	if err != nil {
@@ -51,7 +51,7 @@ func run() error {
 func readPathFromFile(filePath string) (string, error) {
 	content, err := os.ReadFile(filePath)
 	if err != nil {
-		return "", fmt.Errorf("could not read %s: %w\n", filePath, err)
+		return "", fmt.Errorf("could not read %s: %w", filePath, err)
 	}
 	c := strings.TrimSpace(string(content))
 	log.Printf("read '%s' - '%s'\n", filePath, c)
