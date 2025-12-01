@@ -9,8 +9,6 @@ import (
 	"strings"
 )
 
-var MO2PathFile = filepath.Join("modorganizer2", "instance_path.txt")
-
 func main() {
 	exitCode := 0
 
@@ -48,8 +46,19 @@ func run() error {
 		return cmd.Run()
 	}
 
+	var args []string
+scanArgs:
+	for _, arg := range os.Args[1:] {
+		switch {
+		case strings.HasPrefix(arg, SchemeNXM),
+			strings.HasPrefix(arg, SchemeMO2Shortcut),
+			arg == MO2ArgPick:
+			args = []string{arg}
+			break scanArgs
+		}
+	}
 	fmt.Printf("Launching %s...\n", exePath)
-	cmd := exec.Command(exePath, os.Args[1:]...)
+	cmd := exec.Command(exePath, args...)
 	cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, logWriter, logWriter
 	return cmd.Run()
 }
