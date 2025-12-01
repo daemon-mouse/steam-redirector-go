@@ -10,4 +10,5 @@ const (
 	SchemeNXM         = "nxm://"
 	SchemeMO2Shortcut = "moshortcut://"
 	MO2ArgPick        = "--pick"
+	EnvNoRedirect     = "STEAMREDIRECTOR_NO_REDIRECT"
 )
