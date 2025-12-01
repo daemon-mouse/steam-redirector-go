@@ -12,11 +12,17 @@ import (
 var MO2PathFile = filepath.Join("modorganizer2", "instance_path.txt")
 
 func main() {
+	exitCode := 0
+
 	startLog()
-	defer closeLog()
+	defer func() {
+		closeLog()
+		os.Exit(exitCode)
+	}()
 
 	if err := run(); err != nil {
-		log.Fatalf("fatal error: %v\n", err)
+		log.Printf("fatal error: %v\n", err)
+		exitCode = 1
 	}
 }
 
