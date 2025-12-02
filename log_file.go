@@ -12,10 +12,12 @@ var logFile *os.File
 // startLog opens the log file steam-redirector.log and arranges for all future
 // calls to functions in the log package to write to it in addition to stderr.
 func startLog() {
-	// If this is a first run, we want to erase any existing log file and create
-	// it if it doesn't exist.
+	// Open the log file for writing and create it if it doesn't exist.
 	logFileFlags := os.O_WRONLY | os.O_CREATE
-	if _, has := os.LookupEnv(EnvNoRedirect); has {
+	if _, has := os.LookupEnv(EnvNoRedirect); !has {
+		// If this is a first run, we want to erase any existing log file.
+		logFileFlags |= os.O_TRUNC
+	} else {
 		// On a second run, we want to append to the log file rather than
 		// clearing it.
 		logFileFlags |= os.O_APPEND
