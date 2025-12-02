@@ -39,7 +39,7 @@ func run() error {
 	if _, has := os.LookupEnv(EnvNoRedirect); !has {
 		envErr := os.Setenv(EnvNoRedirect, "1")
 		if envErr != nil {
-			log.Printf("warn: failed to set environment variable %s=1: %v\n", EnvNoRedirect, err)
+			log.Printf("warn: failed to set environment variable %s=1: %v\n", EnvNoRedirect, envErr)
 		}
 
 		// This is our first launch. Launch ModOrganizer 2.
