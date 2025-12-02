@@ -85,11 +85,13 @@ func readPathFromFile(filePath string) (string, error) {
 		return "", fmt.Errorf("could not read %s: %w", filePath, err)
 	}
 	c := strings.TrimSpace(string(content))
-	log.Printf("read '%s' - '%s'\n", filePath, c)
+	log.Printf("read (from %s) launcher: %s\n", filePath, c)
 	return c, nil
 }
 
 // getOriginalLauncher infers the path to the original launcher executable.
 func getOriginalLauncher(redirectorPath string) (string, error) {
-	return filepath.Join(filepath.Dir(redirectorPath), "_"+filepath.Base(redirectorPath)), nil
+	launcher := filepath.Join(filepath.Dir(redirectorPath), "_"+filepath.Base(redirectorPath))
+	log.Printf("original launcher: %s\n", launcher)
+	return launcher, nil
 }
