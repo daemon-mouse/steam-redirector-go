@@ -17,3 +17,15 @@ To compile:
 | Native         | `go build`                           |
 | Windows 64-bit | `GOOS=windows GOARCH=amd64 go build` |
 | Windows 32-bit | `GOOS=windows GOARCH=386 go build`   |
+
+Notes:
+
+Build as DLL:
+```bash
+CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64 go build -buildmode=c-shared -o steam-redirector.dll
+```
+
+Dump version.dll:
+```bash
+winedump spec test.dll -I . -f ~/'.steam/steam/steamapps/common/Proton 10.0/files/share/default_pfx/drive_c/windows/syswow64/version.dll'
+```
