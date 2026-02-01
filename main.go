@@ -31,6 +31,7 @@ func main() {
 func run() error {
 	var exePath string
 	var err error
+	var exeArgs []string
 
 	// This program is run twice on a usual game launch: once by the game
 	// launcher (Steam, Heroic, etc.), and then by ModOrganizer 2. We set an
@@ -45,10 +46,26 @@ func run() error {
 		// This is our first launch. Launch ModOrganizer 2.
 		log.Printf("Reading from file...\n")
 		exePath, err = readPathFromFile(MO2PathFile)
+
+		// Scan for the first argument that appears to be intended for
+		// ModOrganizer 2, and use that as the sole argument to the subprocess.
+	scanArgs:
+		for _, arg := range os.Args[1:] {
+			switch {
+			case strings.HasPrefix(arg, SchemeNXM),
+				strings.HasPrefix(arg, SchemeMO2Shortcut),
+				arg == MO2ArgPick:
+				exeArgs = []string{arg}
+				break scanArgs
+			}
+		}
 	} else {
 		// This is our second launch. Launch the actual game.
 		log.Printf("Reading original launcher...\n")
 		exePath, err = getOriginalLauncher(os.Args[0])
+
+		// Pass arguments given by ModOrganizer 2.
+		exeArgs = os.Args[1:]
 	}
 	if err != nil {
 		// Launch explorer as a fallback in case of error.
@@ -59,21 +76,8 @@ func run() error {
 		return cmd.Run()
 	}
 
-	// Scan for the first argument that appears to be intended for ModOrganizer
-	// 2, and use that as the sole argument to the subprocess.
-	var args []string
-scanArgs:
-	for _, arg := range os.Args[1:] {
-		switch {
-		case strings.HasPrefix(arg, SchemeNXM),
-			strings.HasPrefix(arg, SchemeMO2Shortcut),
-			arg == MO2ArgPick:
-			args = []string{arg}
-			break scanArgs
-		}
-	}
 	fmt.Printf("Launching %s...\n", exePath)
-	cmd := exec.Command(exePath, args...)
+	cmd := exec.Command(exePath, exeArgs...)
 	cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, logWriter, logWriter
 	return cmd.Run()
 }
