@@ -49,15 +49,19 @@ func run() error {
 
 		// Scan for the first argument that appears to be intended for
 		// ModOrganizer 2, and use that as the sole argument to the subprocess.
-	scanArgs:
+		ignoredArgs := make([]string, 0, len(os.Args[1:]))
 		for _, arg := range os.Args[1:] {
-			switch {
-			case strings.HasPrefix(arg, SchemeNXM),
-				strings.HasPrefix(arg, SchemeMO2Shortcut),
-				arg == MO2ArgPick:
+			if exeArgs == nil &&
+				(strings.HasPrefix(arg, SchemeNXM) ||
+					strings.HasPrefix(arg, SchemeMO2Shortcut) ||
+					arg == MO2ArgPick) {
 				exeArgs = []string{arg}
-				break scanArgs
+			} else {
+				ignoredArgs = append(ignoredArgs, arg)
 			}
+		}
+		if len(ignoredArgs) > 0 {
+			log.Printf("warn: ignoring program arguments %v\n", ignoredArgs)
 		}
 	} else {
 		// This is our second launch. Launch the actual game.
